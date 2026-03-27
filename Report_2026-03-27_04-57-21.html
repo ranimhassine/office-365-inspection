@@ -1,0 +1,2581 @@
+<html>
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+    <title>Office 365 Security Inspection Report - Consultim-IT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.24.1/components/prism-powershell.min.js"></script>
+    <style>
+    :root {
+      --brand-gold: #C89434;
+      --brand-gold-light: #D4A853;
+      --brand-dark: #1A1C1E;
+      --brand-surface: #22252A;
+      --brand-surface2: #2C3038;
+      --brand-border: #383D45;
+      --brand-text: #E8EAF0;
+      --brand-muted: #8A8F9A;
+      --critical: #E53E3E;
+      --high: #ED8936;
+      --medium: #ECC94B;
+      --low: #48BB78;
+      --info: #A0AEC0;
+      --critical-bg: rgba(229,62,62,.12);
+      --high-bg: rgba(237,137,54,.12);
+      --medium-bg: rgba(236,201,75,.12);
+      --low-bg: rgba(72,187,120,.12);
+      --info-bg: rgba(160,174,192,.1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--brand-dark); color: var(--brand-text); font-family: 'IBM Plex Sans', sans-serif; font-size: 14px; line-height: 1.6; }
+
+    /* COVER HEADER */
+    .cover-header { background: linear-gradient(135deg,#14161A 0%,#1E2228 50%,#14161A 100%); border-bottom: 3px solid var(--brand-gold); padding: 48px 64px 40px; position: relative; overflow: hidden; }
+    .cover-header::before { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(-45deg,transparent,transparent 40px,rgba(200,148,52,.03) 40px,rgba(200,148,52,.03) 41px); pointer-events: none; }
+    .cover-header-inner { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 1; }
+    .cover-logo { width: 160px; height: auto; }
+    .cover-title-block { text-align: right; }
+    .cover-eyebrow { font-family: 'Rajdhani', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 4px; text-transform: uppercase; color: var(--brand-gold); margin-bottom: 8px; }
+    .cover-title { font-family: 'Rajdhani', sans-serif; font-size: 42px; font-weight: 700; color: var(--brand-text); line-height: 1.1; }
+    .cover-title span { color: var(--brand-gold); }
+    .cover-subtitle { font-size: 13px; color: var(--brand-muted); margin-top: 8px; font-weight: 300; letter-spacing: 1px; }
+    .cover-meta { background: var(--brand-surface); border: 1px solid var(--brand-border); border-top: 3px solid var(--brand-gold); padding: 20px 64px; display: flex; gap: 48px; font-size: 12px; flex-wrap: wrap; }
+    .cover-meta-item { display: flex; flex-direction: column; gap: 3px; }
+    .cover-meta-label { font-family: 'Rajdhani', sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--brand-gold); font-weight: 600; }
+    .cover-meta-value { color: var(--brand-text); font-weight: 500; }
+
+    /* LAYOUT */
+    .page-wrapper { max-width: 1100px; margin: 0 auto; padding: 48px 64px; }
+    .section-heading { font-family: 'Rajdhani', sans-serif; font-size: 22px; font-weight: 700; color: var(--brand-text); letter-spacing: 1px; margin: 48px 0 20px; padding-bottom: 10px; border-bottom: 1px solid var(--brand-border); display: flex; align-items: center; gap: 12px; }
+    .section-heading::before { content: ''; display: block; width: 4px; height: 22px; background: var(--brand-gold); border-radius: 2px; flex-shrink: 0; }
+
+    /* EXEC SUMMARY */
+    .execsum-card { background: var(--brand-surface); border: 1px solid var(--brand-border); border-left: 4px solid var(--brand-gold); border-radius: 6px; padding: 28px 32px; line-height: 1.8; color: #C8CCD8; font-size: 13.5px; }
+    .execsum-card b { color: var(--brand-text); font-weight: 600; }
+    .execsum-card a { color: var(--brand-gold-light); text-decoration: none; }
+
+    /* STAT PILLS */
+    .stat-row { display: flex; gap: 16px; margin: 24px 0; flex-wrap: wrap; }
+    .stat-pill { background: var(--brand-surface2); border: 1px solid var(--brand-border); border-radius: 8px; padding: 16px 24px; display: flex; flex-direction: column; gap: 4px; min-width: 110px; }
+    .stat-pill-num { font-family: 'Rajdhani', sans-serif; font-size: 32px; font-weight: 700; line-height: 1; }
+    .stat-pill-label { font-size: 11px; color: var(--brand-muted); text-transform: uppercase; letter-spacing: 1.5px; }
+
+    /* CHARTS */
+    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0; }
+    .chart-card { background: var(--brand-surface); border: 1px solid var(--brand-border); border-radius: 8px; padding: 24px; }
+    .chart-card-title { font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--brand-gold); margin-bottom: 16px; }
+    .chart-card canvas { max-height: 260px; }
+
+    /* FINDINGS TABLE */
+    .findings-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px; }
+    .findings-table th { background: var(--brand-surface2); border-bottom: 2px solid var(--brand-gold); padding: 12px 16px; text-align: left; font-family: 'Rajdhani', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--brand-gold); }
+    .findings-table td { padding: 10px 16px; border-bottom: 1px solid var(--brand-border); vertical-align: middle; color: #C8CCD8; }
+    .findings-table tr:hover td { background: var(--brand-surface2); }
+    .findings-table td:first-child { font-family: 'IBM Plex Mono', monospace; color: var(--brand-muted); font-size: 12px; width: 50px; text-align: center; }
+    .findings-table a { color: var(--brand-text); text-decoration: none; font-weight: 500; }
+    .findings-table a:hover { color: var(--brand-gold-light); }
+
+    /* SEVERITY BADGES */
+    .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 4px; font-family: 'Rajdhani', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    .badge-Critical { background: var(--critical-bg); color: var(--critical); border: 1px solid rgba(229,62,62,.3); }
+    .badge-High { background: var(--high-bg); color: var(--high); border: 1px solid rgba(237,137,54,.3); }
+    .badge-Medium { background: var(--medium-bg); color: var(--medium); border: 1px solid rgba(236,201,75,.3); }
+    .badge-Low { background: var(--low-bg); color: var(--low); border: 1px solid rgba(72,187,120,.3); }
+    .badge-Informational { background: var(--info-bg); color: var(--info); border: 1px solid rgba(160,174,192,.2); }
+
+    /* FINDING DETAIL CARDS */
+    .finding-card { background: var(--brand-surface); border: 1px solid var(--brand-border); border-radius: 8px; margin: 28px 0; overflow: hidden; }
+    .finding-card-header { padding: 18px 24px; background: var(--brand-surface2); border-bottom: 1px solid var(--brand-border); display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .finding-card-num { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--brand-muted); background: var(--brand-dark); border: 1px solid var(--brand-border); border-radius: 4px; padding: 2px 8px; flex-shrink: 0; }
+    .finding-card-title { font-family: 'Rajdhani', sans-serif; font-size: 17px; font-weight: 700; color: var(--brand-text); flex: 1; }
+    .finding-card-body { padding: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .finding-field { display: flex; flex-direction: column; gap: 6px; }
+    .finding-field.full-width { grid-column: 1 / -1; }
+    .finding-field-label { font-family: 'Rajdhani', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--brand-gold); }
+    .finding-field-value { color: #C8CCD8; font-size: 13px; line-height: 1.7; }
+    .finding-field-value a { color: var(--brand-gold-light); text-decoration: none; }
+
+    /* AFFECTED OBJECTS */
+    .affected-list { background: var(--brand-dark); border: 1px solid var(--brand-border); border-radius: 6px; padding: 12px 16px; list-style: none; max-height: 220px; overflow-y: auto; }
+    .affected-list li { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #A0A8B8; padding: 4px 0; border-bottom: 1px solid var(--brand-border); line-height: 1.5; }
+    .affected-list li:last-child { border-bottom: none; }
+    .affected-list li::before { content: '\25B8'; color: var(--brand-gold); margin-right: 8px; }
+
+    /* REFERENCES */
+    .refs-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .refs-list li::before { content: '\2192'; color: var(--brand-gold); margin-right: 8px; }
+    .refs-list a { color: var(--brand-gold-light); text-decoration: none; font-size: 13px; }
+    .refs-list a:hover { text-decoration: underline; }
+
+    /* CODE */
+    pre[class*="language-"] { background: var(--brand-dark) !important; border: 1px solid var(--brand-border); border-radius: 6px; font-size: 12px; margin: 0; }
+
+    /* APPENDIX TABLE */
+    #inspectors { width: 100%; border-collapse: collapse; font-size: 12px; }
+    #inspectors th, #inspectors td { border: 1px solid var(--brand-border); padding: 8px 12px; text-align: center; vertical-align: middle; color: #C8CCD8; }
+    #inspectors thead th { background: var(--brand-surface2); color: var(--brand-gold); font-family: 'Rajdhani', sans-serif; letter-spacing: 1.5px; text-transform: uppercase; font-size: 11px; }
+    #inspectors tbody tr:hover td { background: var(--brand-surface2); }
+
+    /* FOOTER */
+    .report-footer { margin-top: 64px; padding: 24px 0; border-top: 1px solid var(--brand-border); display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--brand-muted); }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--brand-dark); }
+    ::-webkit-scrollbar-thumb { background: var(--brand-border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--brand-gold); }
+    </style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover-header">
+  <div class="cover-header-inner">
+    <img class="cover-logo" src="data:image/png;base64,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" alt="Consultim-IT">
+    <div class="cover-title-block">
+      <div class="cover-eyebrow">Security Assessment Report</div>
+      <div class="cover-title">Office 365<br><span>Security Inspection</span></div>
+      <div class="cover-subtitle">365Inspect: Community Edition &nbsp;&middot;&nbsp; Consultim-IT</div>
+    </div>
+  </div>
+</div>
+<div class="cover-meta">
+  <div class="cover-meta-item"><span class="cover-meta-label">Organization</span><span class="cover-meta-value" id="orgName">&mdash;</span></div>
+  <div class="cover-meta-item"><span class="cover-meta-label">Report Date</span><span class="cover-meta-value" id="reportDate">&mdash;</span></div>
+  <div class="cover-meta-item"><span class="cover-meta-label">Prepared By</span><span class="cover-meta-value" id="preparedBy">&mdash;</span></div>
+  <div class="cover-meta-item"><span class="cover-meta-label">Total Findings</span><span class="cover-meta-value" id="totalFindings">&mdash;</span></div>
+</div>
+
+<div class="page-wrapper">
+
+<div class="section-heading">About This Report</div>
+<!--BEGIN_EXECSUM_TEMPLATE-->
+<div class="execsum-card">
+  This report was generated by <b>365Inspect: Community Edition</b>, the open-source Microsoft 365 / Office 365
+  assessment tool by <a href="https://soteria.io">Soteria &ndash; Security Solutions &amp; Advisory</a>.<br><br>
+  <b>Prepared for organization:</b><b> Contoso - M365x36063842</b><br/><br/><b>Prepared by:</b><b> admin@M365x36063842.onmicrosoft.com </b><br/><br/><b>Stats</b>:<br/> <b>35</b> opportunities for improvement identified from <b>108</b> points of inspection.<br/><br/>
+</div>
+<!--END_EXECSUM_TEMPLATE-->
+
+<!--BEGIN_CHART_TEMPLATE-->
+<div class="stat-row" id="statRow" style="display:none;">
+  <div class="stat-pill"><div class="stat-pill-num" id="critNum" style="color:var(--critical)">0</div><div class="stat-pill-label">Critical</div></div>
+  <div class="stat-pill"><div class="stat-pill-num" id="highNum" style="color:var(--high)">0</div><div class="stat-pill-label">High</div></div>
+  <div class="stat-pill"><div class="stat-pill-num" id="medNum" style="color:var(--medium)">0</div><div class="stat-pill-label">Medium</div></div>
+  <div class="stat-pill"><div class="stat-pill-num" id="lowNum" style="color:var(--low)">0</div><div class="stat-pill-label">Low</div></div>
+  <div class="stat-pill"><div class="stat-pill-num" id="infoNum" style="color:var(--info)">0</div><div class="stat-pill-label">Informational</div></div>
+  <div class="stat-pill"><div class="stat-pill-num" id="totalNum" style="color:var(--brand-gold)">0</div><div class="stat-pill-label">Total</div></div>
+</div>
+
+<div class="section-heading">Risk Severity</div>
+<div class="charts-grid">
+  <div class="chart-card">
+    <div class="chart-card-title">Findings by Severity</div>
+    <canvas id="riskChart"></canvas>
+  </div>
+  <div class="chart-card">
+    <div class="chart-card-title">Risk Distribution by Area</div>
+    <canvas id="distChart"></canvas>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+<script>
+  var totalFindingsString = '35';
+  var totalFindings = parseInt(totalFindingsString);
+  var criticalCount = 18;
+  var highCount = 8;
+  var mediumCount = 3;
+  var lowCount = 1;
+  var infoCount = 5;
+
+  // Populate stat pills
+  document.getElementById('statRow').style.display = 'flex';
+  document.getElementById('critNum').textContent = criticalCount;
+  document.getElementById('highNum').textContent = highCount;
+  document.getElementById('medNum').textContent = mediumCount;
+  document.getElementById('lowNum').textContent = lowCount;
+  document.getElementById('infoNum').textContent = infoCount;
+  document.getElementById('totalNum').textContent = totalFindings;
+  document.getElementById('totalFindings').textContent = totalFindings + ' of ' + document.querySelectorAll('#inspectors tbody tr').length + ' inspected';
+  document.getElementById('reportDate').textContent = new Date().toISOString().split('T')[0];
+
+  // Update org/preparer from execsum if possible
+  var execsum = document.querySelector('.execsum-card');
+  if (execsum) {
+    var orgMatch = execsum.innerHTML.match(/Prepared for organization:<\/b><b>\s*(.*?)<\/b>/);
+    if (orgMatch) document.getElementById('orgName').textContent = orgMatch[1].trim();
+    var byMatch = execsum.innerHTML.match(/Prepared by:<\/b><b>\s*(.*?)<\/b>/);
+    if (byMatch) document.getElementById('preparedBy').textContent = byMatch[1].replace(/<[^>]+>/g,'').trim();
+  }
+
+  Chart.register(ChartDataLabels);
+  var ctx1 = document.getElementById('riskChart').getContext('2d');
+  new Chart(ctx1, {
+    type: 'bar',
+    data: {
+      labels: ['Critical','High','Medium','Low','Informational'],
+      datasets: [{
+        label: 'Findings',
+        backgroundColor: ['#E53E3E','#ED8936','#ECC94B','#48BB78','#A0AEC0'],
+        data: [criticalCount, highCount, mediumCount, lowCount, infoCount],
+        borderRadius: 4
+      }]
+    },
+    plugins: [ChartDataLabels],
+    options: {
+      indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        datalabels: { anchor: 'end', align: 'end', color: '#E8EAF0', font: { size: 11, weight: 'bold', family: 'IBM Plex Mono' }, formatter: (v) => v }
+      },
+      scales: {
+        x: { grid: { color: '#383D45' }, ticks: { color: '#8A8F9A' }, border: { color: '#383D45' } },
+        y: { grid: { display: false }, ticks: { color: '#C8CCD8' } }
+      }
+    }
+  });
+
+  var ctx2 = document.getElementById('distChart').getContext('2d');
+  var distData = [15, 0, 2, 0, 15, 1, 2];
+  var distLabels = ['Exchange', 'SharePoint', 'Teams', 'Intune', 'Azure AD', 'Security Center', 'Tenant'];
+  var distColors = ['#C89434','#48BB78','#8E44AD','#ED8936','#E53E3E','#ECC94B','#A0AEC0'];
+  new Chart(ctx2, {
+    type: 'doughnut',
+    data: {
+      labels: distLabels,
+      datasets: [{ backgroundColor: distColors, data: distData, borderWidth: 2, borderColor: '#22252A' }]
+    },
+    plugins: [ChartDataLabels],
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'left', labels: { color: '#C8CCD8', font: { family: 'IBM Plex Sans', size: 11 }, boxWidth: 12 } },
+        datalabels: { color: '#E8EAF0', font: { size: 10, weight: 'bold' }, formatter: (v) => v > 0 ? v : '', display: (ctx) => ctx.dataset.data[ctx.dataIndex] > 0 }
+      }
+    }
+  });
+</script>
+<!--END_CHART_TEMPLATE-->
+
+<div class="section-heading">Findings Summary</div>
+<table class="findings-table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Finding Name</th>
+      <th>Inherent Risk</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!--BEGIN_FINDING_SHORT_REPEATER-->
+    <tr>
+      <td>1</td>
+      <td><a href="#finding_1">Administrative Users with No Multi-Factor Authentication Enforced</a></td>
+      <td><span class="badge badge-Critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td>2</td>
+      <td><a href="#finding_2">Applications Registered to Tenant with Certificate Credentials</a></td>
+      <td><span class="badge badge-Critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td>3</td>
+      <td><a href="#finding_3">Applications Registered to Tenant with Client Secret (Password) Credentials</a></td>
+      <td><span class="badge badge-Critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td>4</td>
+      <td><a href="#finding_4">Azure PowerShell Service Principal Assignment Not Enforced</a></td>
+      <td><span class="badge badge-Critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td>5</td>
+      <td><a href="#finding_5">Azure PowerShell Service Principal Configuration Missing</a></td>
+      <td><span class="badge badge-Critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td>6</td>
+      <td><a href="#finding_6">Dangerous Attachment Extensions are Not Filtered</a></td>
+      <td><span class="badge badge-Critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td>7</td>
+      <td><a href="#finding_7">Dangerous Default Permissions</a></td>
+      <td><span class="badge badge-Critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td>8</td>
+      <td><a href="#finding_8">Exchange Mailboxes with IMAP Enabled</a></td>
+      <td><span class="badge badge-Critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td>9</td>
+      <td><a href="#finding_9">Exchange Mailboxes with POP Enabled</a></td>
+      <td><span class="badge badge-Critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td>10</td>
+      <td><a href="#finding_10">External Sender Message Tagging Not Enabled</a></td>
+      <td><span class="badge badge-Critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td>11</td>
+      <td><a href="#finding_11">Malware Filter Policies Don't Alert for Internal Users Sending Malware</a></td>
+      <td><span class="badge badge-Critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td>12</td>
+      <td><a href="#finding_12">No Conditional Access Policies Block Risky Sign-in</a></td>
+      <td><span class="badge badge-Critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td>13</td>
+      <td><a href="#finding_13">No Conditional Access Policies Mitigate User Risk</a></td>
+      <td><span class="badge badge-Critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td>14</td>
+      <td><a href="#finding_14">No Transport Rules to Block Executable Attachments</a></td>
+      <td><span class="badge badge-Critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td>15</td>
+      <td><a href="#finding_15">No Transport Rules to Block Large Attachments</a></td>
+      <td><span class="badge badge-Critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td>16</td>
+      <td><a href="#finding_16">Safe Links Click-Through is Allowed</a></td>
+      <td><span class="badge badge-Critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td>17</td>
+      <td><a href="#finding_17">Third-Party Applications Allowed</a></td>
+      <td><span class="badge badge-Critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td>18</td>
+      <td><a href="#finding_18">Unified Audit Log Search is Not Enabled</a></td>
+      <td><span class="badge badge-Critical">Critical</span></td>
+    </tr>
+    
+    <tr>
+      <td>19</td>
+      <td><a href="#finding_19">Anti-Domain Spoofing Not Fully Enabled</a></td>
+      <td><span class="badge badge-High">High</span></td>
+    </tr>
+    
+    <tr>
+      <td>20</td>
+      <td><a href="#finding_20">Exchange Mailboxes with SendAs Delegates Found</a></td>
+      <td><span class="badge badge-High">High</span></td>
+    </tr>
+    
+    <tr>
+      <td>21</td>
+      <td><a href="#finding_21">Improper Number of Company/Global Administrators</a></td>
+      <td><span class="badge badge-High">High</span></td>
+    </tr>
+    
+    <tr>
+      <td>22</td>
+      <td><a href="#finding_22">MSOnline (MSOL) PowerShell Module Enabled on Tenant</a></td>
+      <td><span class="badge badge-High">High</span></td>
+    </tr>
+    
+    <tr>
+      <td>23</td>
+      <td><a href="#finding_23">No Spam Filters to Flag Emails containing IP Addresses as Spam</a></td>
+      <td><span class="badge badge-High">High</span></td>
+    </tr>
+    
+    <tr>
+      <td>24</td>
+      <td><a href="#finding_24">No Transport Rules to Block Domain Spoofing</a></td>
+      <td><span class="badge badge-High">High</span></td>
+    </tr>
+    
+    <tr>
+      <td>25</td>
+      <td><a href="#finding_25">Suspicious Outgoing Spam Messages Not Monitored</a></td>
+      <td><span class="badge badge-High">High</span></td>
+    </tr>
+    
+    <tr>
+      <td>26</td>
+      <td><a href="#finding_26">Users Allowed to Link Work Accounts to LinkedIn</a></td>
+      <td><span class="badge badge-High">High</span></td>
+    </tr>
+    
+    <tr>
+      <td>27</td>
+      <td><a href="#finding_27">Calendar Sharing with External Users Enabled</a></td>
+      <td><span class="badge badge-Medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td>28</td>
+      <td><a href="#finding_28">No Custom Anti-Malware Policy Present</a></td>
+      <td><span class="badge badge-Medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td>29</td>
+      <td><a href="#finding_29">No Custom Anti-Phishing Policy Present</a></td>
+      <td><span class="badge badge-Medium">Medium</span></td>
+    </tr>
+    
+    <tr>
+      <td>30</td>
+      <td><a href="#finding_30">Microsoft Teams Policies Allow Anonymous Members</a></td>
+      <td><span class="badge badge-Low">Low</span></td>
+    </tr>
+    
+    <tr>
+      <td>31</td>
+      <td><a href="#finding_31">Directory Synchronization Enabled</a></td>
+      <td><span class="badge badge-Informational">Informational</span></td>
+    </tr>
+    
+    <tr>
+      <td>32</td>
+      <td><a href="#finding_32">Microsoft Teams External Access Policies</a></td>
+      <td><span class="badge badge-Informational">Informational</span></td>
+    </tr>
+    
+    <tr>
+      <td>33</td>
+      <td><a href="#finding_33">Password Synchronization Enabled</a></td>
+      <td><span class="badge badge-Informational">Informational</span></td>
+    </tr>
+    
+    <tr>
+      <td>34</td>
+      <td><a href="#finding_34">Tenant License Level</a></td>
+      <td><span class="badge badge-Informational">Informational</span></td>
+    </tr>
+    
+    <tr>
+      <td>35</td>
+      <td><a href="#finding_35">Users Found in Azure AD Roles</a></td>
+      <td><span class="badge badge-Informational">Informational</span></td>
+    </tr>
+    <!--END_FINDING_SHORT_REPEATER-->
+  </tbody>
+</table>
+
+<div class="section-heading">Finding Details</div>
+<!--BEGIN_FINDING_LONG_REPEATER-->
+<div class="finding-card" id="finding_1">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#1</span>
+    <span class="finding-card-title">Administrative Users with No Multi-Factor Authentication Enforced</span>
+    <span class="badge badge-Critical">Critical</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>AllanD@M365x36063842.OnMicrosoft.com in role Global Administrator not configured for MFA</li>
+          
+          <li>IsaiahL@M365x36063842.OnMicrosoft.com in role Global Administrator not configured for MFA</li>
+          
+          <li>LidiaH@M365x36063842.OnMicrosoft.com in role Global Administrator not configured for MFA</li>
+          
+          <li>MeganB@M365x36063842.OnMicrosoft.com in role Global Administrator not configured for MFA</li>
+          
+          <li>NestorW@M365x36063842.OnMicrosoft.com in role Global Administrator not configured for MFA</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">The O365 admin accounts listed above do not have Multi-Factor Authentication enforced by an administrator. Multi-factor authentication is an essential security setting that can prevent an adversary from compromising a user account even if the adversary has their password. Multi-factor authentication is an additional obstacle to adversaries who obtain user credentials through phishing or other means.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">All administrative user accounts</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Critical">Critical</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">There are multiple different ways to roll out MFA and several considerations to take into account before rolling out MFA to the organization. Multi-factor authentication rollout can require significant effort. Follow the detailed O365 MFA guide described below.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/microsoft-365/admin/security-and-compliance/set-up-multi-factor-authentication?view=o365-worldwide" target="_blank">Set Up Multi-Factor Authentication</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_2">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#2</span>
+    <span class="finding-card-title">Applications Registered to Tenant with Certificate Credentials</span>
+    <span class="badge badge-Critical">Critical</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>ConnectSyncProvisioning_WIN-1C5BC5DDK7I_2f321ff362ab - CredentialName: CN=Entra Connect Sync Provisioning, Type: AsymmetricX509Cert, Usage: Verify, ValidFrom: 02/27/2026 11:44:30, ValidTo: 05/28/2026 11:44:30</li>
+          
+          <li>ExchangeOnlineApp-26-02-13-01 - CredentialName: AutomationCert, Type: AsymmetricX509Cert, Usage: Verify, ValidFrom: 02/12/2026 20:05:07, ValidTo: 08/11/2026 20:05:07</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Registered applications within the Tenant can grant excessive OAuth permissions to the associated application and in turn grants those permissions to whomever is controlling the application. Registered Applications that leverage certificate credentials generally bypass MFA and Conditional Access Policies, and may allow attackers to authenticate as the application and perform any actions the application is capable of executing without triggering alerts. With sufficient access and privileges attackers may obtain or add credentials to existing applications in the environment.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">Not Applicable</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Critical">Critical</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Remove unapproved applications and review OAuth permission grants. Soteria recommends Organizations to audit application and service principal credentials regularly to ensure all credentials are valid and expected. Tenants licensed for Advanced Hunting (see Licensing Requirements in the reference links below) may use the KQL query linked in the references below to query for events and create a custom detection rule based on the query.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://www.secureworks.com/research/abusing-azure-application-credentials-to-attack-supply-chains" target="_blank">ABUSING AZURE APPLICATION CREDENTIALS TO ATTACK SUPPLY CHAINS</a></li>
+          
+          <li><a href="https://www.inversecos.com/2021/10/how-to-backdoor-azure-applications-and.html" target="_blank">How to Backdoor Azure Applications and Abuse Service Principals</a></li>
+          
+          <li><a href="https://trustedsec.com/blog/creating-a-malicious-azure-ad-oauth2-application" target="_blank">Creating a Malicious Azure AD OAuth2 Application</a></li>
+          
+          <li><a href="https://learn.microsoft.com/en-us/microsoft-365/security/defender/prerequisites?view=o365-worldwide#licensing-requirements" target="_blank">Microsoft Defender XDR prerequisites</a></li>
+          
+          <li><a href="https://github.com/ThoughtContagion/Useful_KQL_Queries/blob/main/Add%20Credential%20to%20App%20or%20Service%20Principal.kql" target="_blank">Add Credential to App or Service Principal.kql</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_3">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#3</span>
+    <span class="finding-card-title">Applications Registered to Tenant with Client Secret (Password) Credentials</span>
+    <span class="badge badge-Critical">Critical</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>app - CredentialName: sec ValidFrom: 03/11/2026 09:04:04 ValidTo: 09/07/2026 09:04:04</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Registered applications within the Tenant can grant excessive OAuth permissions to the associated application and in turn grants those permissions to whomever is controlling the application. Registered Applications that leverage client secrets (application password credentials) generally bypass MFA and Conditional Access Policies, and may allow attackers to authenticate as the application and perform any actions the application is capable of executing without triggering alerts. With sufficient access and privileges attackers may obtain, brute force, or add credentials to existing applications in the environment.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">Not Applicable</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Critical">Critical</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Remove unapproved applications and review OAuth permission grants. Soteria recommends disabling authentication via client secrets and leveraging certificate authentication instead. This method allows for greater control over the ability to authenticate and impersonate applications within the tenant. Organizations should audit application and service principal credentials regularly to ensure all credentials are valid and expected. Tenants licensed for Advanced Hunting (see Licensing Requirements in the reference links below) may use the KQL query linked in the references below to query for events and create a custom detection rule based on the query.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://www.secureworks.com/research/abusing-azure-application-credentials-to-attack-supply-chains" target="_blank">ABUSING AZURE APPLICATION CREDENTIALS TO ATTACK SUPPLY CHAINS</a></li>
+          
+          <li><a href="https://www.inversecos.com/2021/10/how-to-backdoor-azure-applications-and.html" target="_blank">How to Backdoor Azure Applications and Abuse Service Principals</a></li>
+          
+          <li><a href="https://trustedsec.com/blog/creating-a-malicious-azure-ad-oauth2-application" target="_blank">Creating a Malicious Azure AD OAuth2 Application</a></li>
+          
+          <li><a href="https://learn.microsoft.com/en-us/microsoft-365/security/defender/prerequisites?view=o365-worldwide#licensing-requirements" target="_blank">Microsoft Defender XDR prerequisites</a></li>
+          
+          <li><a href="https://github.com/ThoughtContagion/Useful_KQL_Queries/blob/main/Add%20Credential%20to%20App%20or%20Service%20Principal.kql" target="_blank">Add Credential to App or Service Principal.kql</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_4">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#4</span>
+    <span class="finding-card-title">Azure PowerShell Service Principal Assignment Not Enforced</span>
+    <span class="badge badge-Critical">Critical</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>Neither Azure Active Directory PowerShell nor Microsoft Graph Command Line Tools (Formerly Microsoft Graph PowerShell) assignment is required</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Dangerous default configuration settings were found in the Tenant. By default, Azure tenants allow all users to access the Azure Active Directory and Microsoft Graph PowerShell Modules. This allows any authenticated user or guest the ability to abuse Dangerous Default Permissions, as well as enumerate the entire tenant.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">Assigned Users, Groups, or Directory Roles</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Critical">Critical</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">These permissions can be mitigated by creating and assigning Service Principals for the applications using the instructions in the linked blog post and setting the AppRoleAssignmentRequired attribute to $true for each Service Principal.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://medium.com/soteria-security/azure-ad-default-configuration-blunders-c7abddeae56" target="_blank">Azure AD Default Configuration Blunders</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_5">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#5</span>
+    <span class="finding-card-title">Azure PowerShell Service Principal Configuration Missing</span>
+    <span class="badge badge-Critical">Critical</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>Azure Active Directory PowerShell is not configured</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Dangerous default configuration settings were found in the Tenant. By default, Azure tenants allow all users to access the Azure Active Directory and Microsoft Graph PowerShell Modules. This allows any authenticated user or guest the ability to abuse Dangerous Default Permissions, as well as enumerate the entire tenant.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">Azure AD Service Principal objects for Microsoft Graph PowerShell and Azure Active Directory PowerShell.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Critical">Critical</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">These permissions can be mitigated by creating and assigning Service Principals for the applications using the instructions in the linked blog post.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://medium.com/soteria-security/azure-ad-default-configuration-blunders-c7abddeae56" target="_blank">Azure AD Default Configuration Blunders</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_6">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#6</span>
+    <span class="finding-card-title">Dangerous Attachment Extensions are Not Filtered</span>
+    <span class="badge badge-Critical">Critical</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>File Types not filtered: wll, rtf, gadget, application, cpl, js, jse, ws, msh, msh1, msh2, mshxml, msh1xml, msh2xml, ps1, ps1xml, ps2, ps2xml, psc1, psc2, inf, dotm, xlsm, xltm, xlam, pptm, potm, ppsm, sldm; Filter name: Default</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Email is a primary vector of exploitation. It is common for attackers to send malicious file attachments designed to mimic legitimate business files. A list of historically malicious extensions that should be blocked/filtered from O365 emails is checked against the Tenant's malware filters to determine if these file types are being blocked. The file extensions listed herein are on this list of dangerous file extensions, but no O365 Malware Filter Policy is configured to filter them. Creating filters for these file types may decrease the risk of malware spreading within the organization through phishing or lateral phishing. The common malicious attachments defined in O365 at the time this document was authored are: xll, wll, rtf, reg, ws, wsf, vb, wsc, wsh, msh, msh1, msh2, mshxml, msh1xml, msh2xml, ps1, ps1xml, ps2, ps2xml, psc1, psc2, pif, msi, gadget, application, com, cpl, msc, hta, msp, bat, cmd, js, jse, scf, lnk, inf, dotm, xlsm, xltm, xlam, pptm, potm, ppam, ppsm, sldm.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Critical">Critical</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">This feature is accessible in the Security portal of the O365 Admin Center. Click through to Threat management &rarr; Policy &rarr; Anti-malware, and either edit the Default policy to include the above extensions, or create a custom policy to filter these extensions. Additionally, if other known dangerous attachment types are added to this exceptions list, they may be quickly filtered. However it is recommended to create a new policy to accomplish this as it is a more ideal long-term solution. Before doing this, consider polling key stakeholders in the organization or using available data to determine whether any of these file types are commonly exchanged via email within the organization. The complete list of additional file types may be added using the listed PowerShell commands.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"><pre><code class="language-powershell">$FileTypesAdd = Get-MalwareFilterPolicy -Identity Default | select -Expand FileTypes</code></pre>
+<pre><code class="language-powershell">$FileTypesAdd += "xll","wll","rtf","reg","ws","wsf","vb","wsc","wsh","msh","msh1","msh2","mshxml","msh1xml","msh2xml","ps1","ps1xml","ps2","ps2xml","psc1","psc2","pif","msi","gadget","application","com","cpl","msc","hta","msp","bat","cmd","js","jse","scf","lnk","inf","dotm","xlsm","xltm","xlam","pptm","potm","ppam","ppsm","sldm"</code></pre>
+<pre><code class="language-powershell">Set-MalwareFilterPolicy -Identity Default -EnableFileFilter $true -FileTypes $FileTypesAdd</code></pre></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-malware-protection?view=o365-worldwide#anti-malware-policies" target="_blank">Anti-malware Policies</a></li>
+          
+          <li><a href="https://www.howtogeek.com/137270/50-file-extensions-that-are-potentially-dangerous-on-windows/" target="_blank">50+ File Extensions That Are Potentially Dangerous on Windows</a></li>
+          
+          <li><a href="https://docs.microsoft.com/en-us/powershell/module/exchange/set-malwarefilterpolicy?view=exchange-ps" target="_blank">Set-MalwareFilterPolicy</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_7">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#7</span>
+    <span class="finding-card-title">Dangerous Default Permissions</span>
+    <span class="badge badge-Critical">Critical</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>No Conditional Access Policy exists to restrict non-administrator access to Azure Active Directory or Entra.</li>
+          
+          <li>Users can read all attributes in Azure AD</li>
+          
+          <li>Users can create security groups</li>
+          
+          <li>Users are allowed to create and register applications</li>
+          
+          <li>Users with a verified mail domain can join the tenant</li>
+          
+          <li>Guests can invite other guests into the tenant</li>
+          
+          <li>Users are allowed to create new Azure Active Directory Tenants.</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Dangerous default configuration settings were found in the Tenant. By default, Azure tenants allow all users to access the Azure Active Directory blade, to read all other users' accounts, create groups, and invite guests. These default settings extend to guest accounts as well, allowing guests to perform these same actions. Other default configurations allow for Self-Service creation of accounts from accepted mail domains.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">True</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">False</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Critical">Critical</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">The excessive user permissions can be mitigated by running the listed PowerShell commands as a Global Admin. User access to the Azure AD blade can be restricted by navigating to the Azure Active Directory blade &rarr; User Settings and toggling the 'Restrict access to Azure AD administration portal' to Yes. Guest invites may be restricted by navigating to the Azure Active Directory blade &rarr; External Identities &rarr; External Collaboration Settings, or by going to the Azure Active Directory blade &rarr; User Settings &rarr; Manage external collaboration settings and toggling 'Members can invite' and 'Guests can invite' to No.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"><pre><code class="language-powershell">$permissions = @{AllowedToCreateSecurityGroups = $False;AllowedToCreateApps = $false;AllowedToCreateTenants = $false;}; Update-MgPolicyAuthorizationPolicy -AllowEmailVerifiedUsersToJoinOrganization:$false -DefaultUserRolePermissions $permissions</code></pre></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/azure/active-directory/enterprise-users/directory-self-service-signup" target="_blank">Directory Self Service Signup</a></li>
+          
+          <li><a href="https://o365blog.com/post/limit-user-access/" target="_blank">Limit User Access</a></li>
+          
+          <li><a href="https://www.pentestpartners.com/security-blog/azure-ad-attack-of-the-default-config/" target="_blank">Azure AD - Attack of the Default Config</a></li>
+          
+          <li><a href="https://medium.com/soteria-security/azure-ad-default-configuration-blunders-c7abddeae56" target="_blank">Azure AD Default Configuration Blunders</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_8">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#8</span>
+    <span class="finding-card-title">Exchange Mailboxes with IMAP Enabled</span>
+    <span class="badge badge-Critical">Critical</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li><a href='Exchange Mailboxes with IMAP Enabled.txt'>28 Affected Objects Identified<a/>.</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">The Exchange Online mailboxes listed above have IMAP Authentication enabled. IMAP Authentication is a method of authenticating to an Exchange Online mailbox. Cyber adversaries have used IMAP authentication as a workaround for subtly conducting password spraying attacks or other credential-related attacks, because IMAP authentication is a form of legacy authentication generally not subject to the restraints of Multi-Factor Authentication and other modern authentication safeguards. For these reasons it is recommended that IMAP Authentication be disabled where possible.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">True</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">False</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Critical">Critical</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">This finding refers to individual mailboxes that have IMAP enabled. For these mailboxes, IMAP can be disabled using the Set-CASMailbox commandlet as follows: Set-CASMailbox -Identity [MailboxName] -IMAPEnabled $false where the -Identity flag is the user's email address. A list of affected email addresses is included in this report. Key stakeholders should be polled prior to making this change, as there is a chance IMAP is used within the organization for legacy applications or service accounts.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/exchange/clients/pop3-and-imap4/configure-mailbox-access" target="_blank">Configure mailbox access (POP3 and IMAP)</a></li>
+          
+          <li><a href="https://docs.microsoft.com/en-us/powershell/module/exchange/set-casmailbox?view=exchange-ps" target="_blank">Set-CASMailbox Commandlet Reference</a></li>
+          
+          <li><a href="https://www.ic3.gov/Media/Y2020/PSA200406" target="_blank">Federal Bureau of Investigation Business Email Compromise Mitigation Recommendations</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_9">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#9</span>
+    <span class="finding-card-title">Exchange Mailboxes with POP Enabled</span>
+    <span class="badge badge-Critical">Critical</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li><a href='Exchange Mailboxes with POP Enabled.txt'>28 Affected Objects Identified<a/>.</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">The Exchange Online mailboxes listed above have POP enabled. POP is a method of accessing an Exchange Online mailbox. Cyber adversaries have used POP as a workaround for subtly conducting password spraying attacks or other credential-related attacks, because POP is a form of legacy authentication generally not subject to the restraints of Multi-Factor Authentication and other modern authentication safeguards. For these reasons it is recommended that POP be disabled where possible.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">True</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">False</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Critical">Critical</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">This finding refers to individual mailboxes that have POP enabled. For these mailboxes, POP authentication can be disabled using the Set-CASMailbox commandlet as follows: Set-CASMailbox -Identity [MailboxName] -PopEnabled $false where the -Identity flag is the user's email address. A list of affected email addresses is included in this report. Key stakeholders should be polled prior to making this change, as there is a chance POP is used within the organization for legacy applications or service accounts.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/exchange/clients/pop3-and-imap4/configure-mailbox-access" target="_blank">Configure mailbox access (POP3 and IMAP)</a></li>
+          
+          <li><a href="https://docs.microsoft.com/en-us/powershell/module/exchange/set-casmailbox?view=exchange-ps" target="_blank">Set-CASMailbox Commandlet Reference</a></li>
+          
+          <li><a href="https://www.ic3.gov/Media/Y2020/PSA200406" target="_blank">Federal Bureau of Investigation Business Email Compromise Mitigation Recommendations</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_10">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#10</span>
+    <span class="finding-card-title">External Sender Message Tagging Not Enabled</span>
+    <span class="badge badge-Critical">Critical</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>False</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">By default, Exchange Online does not display a warning on messages from external senders. Enabling this setting adds a mailtip banner to all messages from external senders, alerting mail recipients of the email's origins outside the organization.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">False</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">True</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Critical">Critical</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Mitigation of the finding can be achieved by executing the below PowerShell command. Alternatively, this finding can be mitigated through Transport Rules that prepend or append similar notices to the body of the message. Some organizations may prefer use of Transport Rules as mailtips are sometimes easily overlooked.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"><pre><code class="language-powershell">Set-ExternalInOutlook -Enabled $true</code></pre></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/powershell/module/exchange/set-externalinoutlook?view=exchange-ps" target="_blank">Set-ExternalInOutlook</a></li>
+          
+          <li><a href="https://office365itpros.com/2021/03/11/external-email-tagging-exo/" target="_blank">How to Enable and Use Exchange Online's External Email Tagging Feature</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_11">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#11</span>
+    <span class="finding-card-title">Malware Filter Policies Don't Alert for Internal Users Sending Malware</span>
+    <span class="badge badge-Critical">Critical</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>Malware filter named Default; Admin Address: $null, NotificationsEnabled: False</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Malware being sent by an internal user's email account is often an indication that a security event has occurred. For this reason, it is strongly recommended that each organization have malware filter policies that alert administrators when malware is being sent by an internal user's account. It is possible to configure malware filter policies in O365 that generate these alerts. The malware filter policies listed herein do not alert an administrator when an internal user sends malware.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">False</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">True with a configured mailbox or distribution list address</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Critical">Critical</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">It is possible to configure malware filter policies from within the Exchange Online Protection portal or through the Set-MalwareFilterPolicy command as listed below. Make sure the policy is set to email a service account or administrator that is active and monitored and consider establishing a retention period for which to store malware alerts, as they may be evidence in future security incidents.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"><pre><code class="language-powershell">Set-MalwareFilterPolicy -Identity 'Malware Filter Policy Name' -Action DeleteMessage -EnableInternalSenderAdminNotifications $true -InternalSenderAdminAddress admin@yourdomain.com</code></pre></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://practical365.com/first-steps-configuring-exchange-online-protection/" target="_blank">Configuring Exchange Online Protection</a></li>
+          
+          <li><a href="https://docs.microsoft.com/en-us/powershell/module/exchange/set-malwarefilterpolicy?view=exchange-ps" target="_blank">Set-MalwareFilterPolicy Commandlet Reference (see Example 1 especially)</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_12">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#12</span>
+    <span class="finding-card-title">No Conditional Access Policies Block Risky Sign-in</span>
+    <span class="badge badge-Critical">Critical</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>No policies exist to control user sign-in with a risk level of medium or higher</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">No Conditional Access Policies were found that block users with a sign-in risk of medium of higher. This configuration attempts to determine if the sign-in is being attempted by anyone other than the legitimate user. When not configured, sign-in events that would indicate compromise (impossible travel, etc.) are permitted.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">Configured Conditional Access Policy</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Critical">Critical</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Create or modify Conditional Access Policies to include defined sign-in risk values. An example configuration: Navigate to Azure Active Directory/Microsoft Entra &rarr; Navigate to Conditional Access (Security &rarr; Conditional Access in Azure Active Directory/Protect & Secure &rarr; Conditional Access in Microsoft Entra) &rarr; Select '+ New Policy' &rarr; Select Users &rarr; 'All Users' &rarr; Select 'Cloud apps or actions' &rarr; Select 'All cloud apps' &rarr; Select 'Conditions' &rarr; Select 'Sign-in risk' &rarr; Select 'Yes' to configure &rarr; Select desired risk configurations &rarr; Select 'Grant Controls' &rarr; Select 'Block access' &rarr; Change the 'Enable policy' value to 'On' &rarr; Select 'Create'.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/azure/active-directory/conditional-access/overview" target="_blank">What is Conditional Access in Azure Active Directory?</a></li>
+          
+          <li><a href="https://docs.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-policy-common" target="_blank">Common Conditional Access Policies</a></li>
+          
+          <li><a href="https://techcommunity.microsoft.com/t5/azure-active-directory-identity/raising-the-baseline-security-for-all-organizations-in-the-world/ba-p/3299048" target="_blank">Raising the Baseline Security for all Organizations in the World</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_13">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#13</span>
+    <span class="finding-card-title">No Conditional Access Policies Mitigate User Risk</span>
+    <span class="badge badge-Critical">Critical</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>No policies exist to control user sign-in with a risk level of medium or higher</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">No Conditional Access Policies were found that block sign-in or force password resets on users with a risk of medium of higher. This configuration allows users that have shown indicators of risk or compromise to successfully sign in and access organization resources.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">Configured Conditional Access Policy</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Critical">Critical</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Create or modify Conditional Access Policies to include defined sign-in risk values. An example configuration: Navigate to Azure Active Directory/Microsoft Entra &rarr; Navigate to Conditional Access (Security &rarr; Conditional Access in Azure Active Directory/Protect & Secure &rarr; Conditional Access in Microsoft Entra) &rarr; Select '+ New Policy' &rarr; Select Users &rarr; 'All Users' &rarr; Select 'Cloud apps or actions' &rarr; Select 'All cloud apps' &rarr; Select 'Conditions' &rarr; Select 'User risk' &rarr; Select 'Yes' to configure &rarr; Select desired risk configurations &rarr; Select 'Grant Controls' &rarr; Select 'Block access' or 'Require password change' &rarr; Change the 'Enable policy' value to 'On' &rarr; Select 'Create'.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/azure/active-directory/conditional-access/overview" target="_blank">What is Conditional Access in Azure Active Directory?</a></li>
+          
+          <li><a href="https://docs.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-policy-common" target="_blank">Common Conditional Access Policies</a></li>
+          
+          <li><a href="https://techcommunity.microsoft.com/t5/azure-active-directory-identity/raising-the-baseline-security-for-all-organizations-in-the-world/ba-p/3299048" target="_blank">Raising the Baseline Security for all Organizations in the World</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_14">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#14</span>
+    <span class="finding-card-title">No Transport Rules to Block Executable Attachments</span>
+    <span class="badge badge-Critical">Critical</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>M365x36063842</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">No Exchange Online Transport Rules are in place to block email containing executable attachments. Executable attachments can be used to deliver malicious payloads and exfiltrate company data.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">Configured Transport Rule</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Critical">Critical</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Navigate to the Mail Flow &rarr; Rules screen in the Exchange Admin Center. Add a rule that applies when the message contains executable attachments and takes the action of blocking the message. An article in the References section also describes this process.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/manage-mail-flow-rules" target="_blank">Manage Mail Flow Rules in Exchange Online</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_15">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#15</span>
+    <span class="finding-card-title">No Transport Rules to Block Large Attachments</span>
+    <span class="badge badge-Critical">Critical</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>M365x36063842</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">No Exchange Online Transport Rules are in place to block emails with overly large attachments. Emails with overly large attachments may present a security risk for several reasons. Emails the domains receive may have overly large attachments that contain malware, and adversaries sometimes use overly large files in an attempt to bypass anti-malware scanners or otherwise avoid suspicion. An adversary with access to an organizational email account may also use a large attachment to exfiltrate sensitive data from the organization; for example, emailing an encrypted archive file to other adversarial infrastructure using a compromised O365 account. It is often recommended to create a rule that detects and blocks attachments over a certain size for these reasons.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">Configured Transport Rule</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Critical">Critical</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Go to the Exchange Mail Flow rules screen and create a new rule which blocks attachments over a designated size.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/common-attachment-blocking-scenarios" target="_blank">Common Attachment Blocking Scenarios</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_16">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#16</span>
+    <span class="finding-card-title">Safe Links Click-Through is Allowed</span>
+    <span class="badge badge-Critical">Critical</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>Built-In Protection Policy: True</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Advanced Threat Protection Safe Links (ATP Safe Links) is an Office 365 feature that enables the detection of suspicious links used in attacks delivered via Exchange Email and Teams, such as phishing attacks. ATP Safe Links is configured to allow users to click through a link flagged as unsafe if they choose. It is recommended to disable this ability, as users will often click through to potentially unsafe links if they are given the choice, partially negating the benefit of Safe Links.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">True</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">False</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Critical">Critical</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Use the Set-SafeLinksPolicy function in the Exchange Online PowerShell module as follows: Set-SafeLinksPolicy -AllowClickThrough $false.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/powershell/module/exchange/set-safelinkspolicy?view=exchange-ps" target="_blank">Set-SafeLinksPolicy Reference</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_17">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#17</span>
+    <span class="finding-card-title">Third-Party Applications Allowed</span>
+    <span class="badge badge-Critical">Critical</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>True</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Third-party integrated applications are allowed to run in the organization's Office 365 environment if a user authorizes them to do so. This configuration is considered insecure because a user may grant permissions to a malicious application without fully understanding the security implications. A user who installs a malicious third-party application is in effect compromised. Additionally, there are documented cases of a malicious actor gaining access to sensitive information by enticing a user to allow a third-party integrated application to run within their O365 Tenant.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">True</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">False</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Critical">Critical</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">In the Office 365 administration center, navigate to the Org Settings page, then select Services &rarr; User Consent to Apps and turn user consent off.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/microsoft-365/admin/misc/user-consent?view=o365-worldwide" target="_blank">Managing user consent to apps in Microsoft 365</a></li>
+          
+          <li><a href="https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/Inspect-and-remediate-illicit-consent-grants?view=o365-worldwide" target="_blank">Detect and Remediate Illicit Content Grants</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_18">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#18</span>
+    <span class="finding-card-title">Unified Audit Log Search is Not Enabled</span>
+    <span class="badge badge-Critical">Critical</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>False</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Office 365 Unified Audit Log Search is not enabled in the organization. Unified Audit Log Search allows for the centralized ingestion and searching of audit logs generated by Office 365 and can be a vital source of data for the investigation and detection of security incidents. It is highly recommended to enable unified audit log searching.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">False</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">True</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Critical">Critical</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">In the Office 365 Security and Compliance Center, navigate to Search &rarr; Audit Log Search and click the Turn On Auditing button. An illustrated guide is linked in the References section.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/microsoft-365/compliance/turn-audit-log-search-on-or-off?view=o365-worldwide" target="_blank">Turn Audit Log Search On or Off</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_19">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#19</span>
+    <span class="finding-card-title">Anti-Domain Spoofing Not Fully Enabled</span>
+    <span class="badge badge-High">High</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>False</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Domain Spoofing occurs when an external entity sends email using a mail domain owned by another entity. There are legitimate use cases where domain spoofing is allowed. It is recommended to speak with stakeholders and determine if this type of rule is beneficial and if any exceptions are needed. Microsoft configures some Anti-Spoofing settings by default in the Anti-Phishing policies on tenants, this rule would complement default settings.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">False</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">True</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-High">High</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Review the Anti-Phishing policy in the Security console and enable protection for owned domains, custom domains, or users.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/set-up-anti-phishing-policies?view=o365-worldwide#spoof-settings" target="_blank">Spoof settings</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_20">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#20</span>
+    <span class="finding-card-title">Exchange Mailboxes with SendAs Delegates Found</span>
+    <span class="badge badge-High">High</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>Brian Johnson (TAILSPIN)</li>
+          
+          <li>Conf Room Adams</li>
+          
+          <li>Conf Room Baker</li>
+          
+          <li>Conf Room Crystal</li>
+          
+          <li>Conf Room Hood</li>
+          
+          <li>Conf Room Rainier</li>
+          
+          <li>Conf Room Stevens</li>
+          
+          <li>a94350e8-1c97-4855-a57c-a5ac5c6a005d</li>
+          
+          <li>c295ab65-82ce-458c-9050-5a0f4f24011c</li>
+          
+          <li>c4953d8b-ed0a-4d88-9ce6-3be9c8ded29d</li>
+          
+          <li>da3dc7de-4ac0-4e5a-a82a-7dd2f056a2b6</li>
+          
+          <li>019e2e72-0d8b-449a-9a5a-56355a3eca5b</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">The Exchange Online mailboxes listed above have delegated SendAs permissions to another account.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-High">High</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">This finding refers to individual mailboxes that have SendAs delegated permissions. For these mailboxes, verify that the delegate access is expected, appropriate, and does not violate company policy. Remediation can be accomplished by running the listed PowerShell command. A list of affected email addresses is included in this report.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"><pre><code class="language-powershell">Remove-RecipientPermission -Identity $mailbox -AccessRights SendAs -Confirm:$false -Trustee $member</code></pre></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/powershell/module/exchange/remove-recipientpermission?view=exchange-ps" target="_blank">Remove-RecipientPermission Commandlet Reference</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_21">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#21</span>
+    <span class="finding-card-title">Improper Number of Company/Global Administrators</span>
+    <span class="badge badge-High">High</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>User: MOD Administrator - admin@M365x36063842.onmicrosoft.com, Assignment State: , Assignment Type: </li>
+          
+          <li>User: ProvisioningHealthPME - , Assignment State: , Assignment Type: </li>
+          
+          <li>User: managedenvironments-ar-tenant-connector-ame - , Assignment State: , Assignment Type: </li>
+          
+          <li>User: Allan Deyoung - AllanD@M365x36063842.OnMicrosoft.com, Assignment State: , Assignment Type: </li>
+          
+          <li>User: Nestor Wilke - NestorW@M365x36063842.OnMicrosoft.com, Assignment State: , Assignment Type: </li>
+          
+          <li>User: Isaiah Langer - IsaiahL@M365x36063842.OnMicrosoft.com, Assignment State: , Assignment Type: </li>
+          
+          <li>User: Megan Bowen - MeganB@M365x36063842.OnMicrosoft.com, Assignment State: , Assignment Type: </li>
+          
+          <li>User: Lidia Holloway - LidiaH@M365x36063842.OnMicrosoft.com, Assignment State: , Assignment Type: </li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">It is recommended that two to four users be granted company or global administrative privileges. More than this amount may represent an unsafe distribution of privileges and increases the odds that an administrative account will be compromised by an adversary or otherwise misused. All of the users above have administrative privileges, which is outside the bounds of the recommendation.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">1</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">Between two and four</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-High">High</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Use the Security and Compliance Center to review the administrative privileges granted to the users listed and determine if each user truly requires their administrative privileges. In many cases a more granular set of permissions may be appropriate. Reduce the privileges of each user as appropriate.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/microsoft-365/admin/add-users/about-admin-roles?view=o365-worldwide" target="_blank">About Administrative Roles</a></li>
+          
+          <li><a href="https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/permissions-in-the-security-and-compliance-center?view=o365-worldwide" target="_blank">Permissions in the Security and Compliance Center</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_22">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#22</span>
+    <span class="finding-card-title">MSOnline (MSOL) PowerShell Module Enabled on Tenant</span>
+    <span class="badge badge-High">High</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>MSOL PowerShell is enabled on the tenant.</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Microsoft's legacy Azure AD PowerShell Module MSOnline (MSOL) PowerShell is not disabled on the tenant. This module does not support Modern Authentication and is deprecated as of March 30, 2024 with no updates or support beyond migrating existing scripts and workloads to Microsoft Graph.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">Not Applicable</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-High">High</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Remediation of this finding may be completed by running the below PowerShell command.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"><pre><code class="language-powershell">Update-MgPolicyAuthorizationPolicy -BlockMsolPowerShell:$true</code></pre></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://techcommunity.microsoft.com/t5/microsoft-entra-blog/important-azure-ad-graph-retirement-and-powershell-module/ba-p/3848270" target="_blank">Important: Azure AD Graph Retirement and Powershell Module Deprecation</a></li>
+          
+          <li><a href="https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.identity.signins/update-mgpolicyauthorizationpolicy?view=graph-powershell-1.0" target="_blank">Update-MgPolicyAuthorizationPolicy</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_23">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#23</span>
+    <span class="finding-card-title">No Spam Filters to Flag Emails containing IP Addresses as Spam</span>
+    <span class="badge badge-High">High</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>Default: Off</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">The organization does not have Exchange Spam/Content Filter policies to flag emails containing IP addresses as spam. Cyber adversaries often send emails that contain the IP addresses of malicious websites or other attack infrastructure. This may occur during phishing or lateral phishing. For this reason it is advisable to create Exchange Transport Rules to detect IP addresses in email as spam.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">Off</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">On</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-High">High</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Navigate to the Exchange Admin Center's 'Protection' menu, then click the 'spam filter' section. Create a spam policy or modify the default spam policy such that it is activated when numeric IP addresses are in URLs. The Set-HostedContentFilterPolicy commandlet may also be used to configure these settings. These settings may soon be replaced by the Advanced Spam Filter (ASF) settings in Exchange Online Protection.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://practical365.com/first-steps-configuring-exchange-online-protection/" target="_blank">Configuring Exchange Online Protection, First Steps</a></li>
+          
+          <li><a href="https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/advanced-spam-filtering-asf-options?view=o365-worldwide" target="_blank">Advanced Spam Filter (ASF) Settings in Exchange Online Protection</a></li>
+          
+          <li><a href="https://docs.microsoft.com/en-us/powershell/module/exchange/set-hostedcontentfilterpolicy?view=exchange-ps" target="_blank">Set-HostedContentFilterPolicy Commandlet Reference</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_24">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#24</span>
+    <span class="finding-card-title">No Transport Rules to Block Domain Spoofing</span>
+    <span class="badge badge-High">High</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>M365x36063842</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">No Exchange Online Transport Rules are in place to block emails that are spoofing Tenant owned domains. Domain spoofing occurs when an external entity sends email using a mail domain owned by another entity. There are legitimate use cases where domain spoofing is allowed. It is recommended to speak with stakeholders and determine if this type of rule is beneficial and if any exceptions are needed. Microsoft configures some Anti-Spoofing settings by default in the Anti-Phishing policies on tenants, this rule would complement default settings.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">Configured Transport Rules</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-High">High</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Go to the Exchange Mail Flow rules screen and create a new rule which blocks emails sent from outside the organization, to inside the organization, where the sender's domain is any of the organization's owned domains.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spoofing-protection?view=o365-worldwide" target="_blank">Anti-spoofing protection in EOP</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_25">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#25</span>
+    <span class="finding-card-title">Suspicious Outgoing Spam Messages Not Monitored</span>
+    <span class="badge badge-High">High</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>No configured recipients.</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">The Outbound Spam Policy allows for admins to be sent copies of suspected/suspicious outbound messages that may be spam. This configuration can be used to detect and alert administrators to potentially compromised or abused accounts.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">A configured recipient mailbox</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-High">High</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">This setting is most easily accessible via the Set-HostedOutboundSpamFilterPolicy function in the Exchange Online PowerShell module. Use the Set-HostedOutboundSpamFilterPolicy function as listed below.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"><pre><code class="language-powershell">Set-HostedOutboundSpamFilterPolicy -BccSuspiciousOutboundMail $true -BccSuspiciousOutboundAdditionalRecipients 'administrator@yourdomain'</code></pre></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/powershell/module/exchange/set-hostedoutboundspamfilterpolicy?view=exchange-ps" target="_blank">Set-HostedOutboundSpamFilterPolicy Function Reference</a></li>
+          
+          <li><a href="http://www.thatlazyadmin.com/2019/04/01/configure-outbound-spam-notification-office-365-exchange-online/" target="_blank">Configure Outbound Spam Notification Office 365 Exchange Online</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_26">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#26</span>
+    <span class="finding-card-title">Users Allowed to Link Work Accounts to LinkedIn</span>
+    <span class="badge badge-High">High</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>All users allowed to connect their work or school account with LinkedIn</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Allowing users to link their organizational accounts to LinkedIn enables the sharing of data between the organization's Microsoft 365 tenant and LinkedIn. Depending on the options the user chooses, this connection may enable bidirectional sharing of the user's profile data, calendar information (including meeting names, times, locations, and attendees), Microsoft service usage data (termed 'Interests'), licensed features (apps and services offered by the organization), and contacts in Outlook, Skype, Microsoft Teams and other Microsoft services. The organization has no control over the option chosen, nor does the organization have any visibility into the option a user chooses. Any data synchronized to LinkedIn from a linked account persists on LinkedIn even after accounts are unlinked. This configuration is enabled by default and allows for the potential loss of sensitive information and enumeration of internal accounts, applications, and data.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">Yes</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">No</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-High">High</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Remediation of this finding can be accomplished by navigating to Microsoft Entra admin center &rarr; Users &rarr; User settings and selecting the desired option under LinkedIn account connections.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://www.linkedin.com/help/linkedin/answer/a553054" target="_blank">LinkedIn in Microsoft Applications with Your Work or School Account</a></li>
+          
+          <li><a href="https://support.microsoft.com/en-us/office/your-data-ae9c08a7-4d06-45b5-a065-320a97bc1400" target="_blank">LinkedIn integration - Your data</a></li>
+          
+          <li><a href="https://learn.microsoft.com/en-us/entra/identity/users/linkedin-integration" target="_blank">Integrate LinkedIn account connections in Microsoft Entra ID</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_27">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#27</span>
+    <span class="finding-card-title">Calendar Sharing with External Users Enabled</span>
+    <span class="badge badge-Medium">Medium</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>Default Sharing Policy</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Due to the enabled sharing policies listed above, the organization's users are permitted to share their Office 365 Calendars with any external person. It is not recommended to allow calendar sharing to users outside the organization as the data in calendar entries may reveal sensitive information about the organization or users.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">Not applicable</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Medium">Medium</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Modify the affected sharing policies and disable calendar sharing. This is possible from the O365 Admin Center, in the Exchange &rarr; Organization &rarr; Sharing screen. The Set-SharingPolicy PowerShell commandlets can also be used to perform this remediation.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/exchange/sharing/sharing-policies/modify-a-sharing-policy" target="_blank">Modify a sharing policy</a></li>
+          
+          <li><a href="https://docs.microsoft.com/en-us/exchange/sharing/sharing-policies/create-a-sharing-policy" target="_blank">Create a sharing policy in Exchange Online</a></li>
+          
+          <li><a href="https://www.thatlazyadmin.com/disable-anonymous-calendar-sharing-office-365-admin-center-powershell/" target="_blank">ThatLazyAdmin: Disabling anonymous calendar sharing</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_28">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#28</span>
+    <span class="finding-card-title">No Custom Anti-Malware Policy Present</span>
+    <span class="badge badge-Medium">Medium</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>Default</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">It is possible to create custom anti-malware policies in Exchange Online to provide additional protection against threats that may be received via email. No anti-malware policy besides the Microsoft Default Anti-Malware Policy was detected in the O365 Tenant. Although the default anti-malware policy can provide some protection, each organization should consider creating an anti-malware policy that is customized to suit the nature of their day-to-day activities.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">Not applicable</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Medium">Medium</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Follow the 'Configure anti-malware policies in Exchange Online Protection' guide below for a full introduction to creating a custom anti-malware policy. It is possible to create an anti-malware policy and enable it through the Exchange administration center or via Exchange Online PowerShell using the Set-MalwareFilterPolicy or New-MalwareFilterPolicy commands.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/configure-anti-malware-policies?view=o365-worldwide" target="_blank">Configure anti-malware policies in Exchange Online Protection</a></li>
+          
+          <li><a href="https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-malware-protection?view=o365-worldwide" target="_blank">Anti-malware protection in EOP</a></li>
+          
+          <li><a href="https://docs.microsoft.com/en-us/powershell/module/exchange/new-malwarefilterpolicy?view=exchange-ps" target="_blank">New-MalwareFilterPolicy</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_29">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#29</span>
+    <span class="finding-card-title">No Custom Anti-Phishing Policy Present</span>
+    <span class="badge badge-Medium">Medium</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>M365x36063842</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">It is possible to create custom Anti-Phishing Policies in Exchange Online to provide additional protection against threats that may be received via email. No Anti-Phishing Policy besides the Microsoft Default Anti-Phishing Policy was detected in the O365 tenant. Although the default Anti-Phishing Policy can provide some protection, each organization should consider creating an Anti-Phishing Policy that is customized to suit the nature of their day-to-day activities.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">Not applicable</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Medium">Medium</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Follow the 'Anti-Phishing Policies in Microsoft 365' article below to begin constructing a custom Anti-Phishing Policy.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/set-up-anti-phishing-policies?view=o365-worldwide" target="_blank">Anti-phishing policies in Microsoft 365</a></li>
+          
+          <li><a href="https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/configure-mdo-anti-phishing-policies?view=o365-worldwide" target="_blank">Configure anti-phishing policies </a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_30">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#30</span>
+    <span class="finding-card-title">Microsoft Teams Policies Allow Anonymous Members</span>
+    <span class="badge badge-Low">Low</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>Error processing request.</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Microsoft Teams by default enables and allows  authenticated users to invite anonymous users to join Teams meetings. Some organizations may wish to disable this functionality, or restrict certain users, members, or roles from allowing anonymous users to join meetings. Changing these settings may have unintended consequences. Speak with shareholders and understand what functionality may be affected before disabling this access.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">True for default policies: Global, Tag:AllOn, Tag:RestrictedAnonymousAccess, Tag:AllOff, Tag:RestrictedAnonymousNoRecording, Tag:Default, Tag:Kiosk</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">Not applicable</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Low">Low</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">This can be mitigated by navigating to the Teams admin center and turning off 'Anonymous users can join a meeting' under Meeting settings. This disables anonymous access globally. Alternatively, specific users and groups can be targeted by creating a new Meeting Policy and issuing the listed command in PowerShell.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"><pre><code class="language-powershell">Set-CsTeamsMeetingPolicy -Identity 'Policy Name' -AllowAnonymousUsersToJoinMeeting $false</code></pre></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/microsoftteams/manage-external-access" target="_blank">Manage external access (federation) - Microsoft Teams</a></li>
+          
+          <li><a href="https://docs.microsoft.com/en-us/skypeforbusiness/set-up-policies-in-your-organization/block-point-to-point-file-transfers" target="_blank">Block Point-to-Point file transfers</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_31">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#31</span>
+    <span class="finding-card-title">Directory Synchronization Enabled</span>
+    <span class="badge badge-Informational">Informational</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>Directory Synchronization is enabled. Last synced 03/13/2026 09:17:56</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Directory synchronization allows you to manage identities in your Active Directory Domain Services (AD DS) and all updates to user accounts, groups, and contacts are synchronized to the Azure Active Directory (Azure AD) tenant of your Microsoft 365 subscription.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">Not applicable</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Informational">Informational</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Follow Microsoft guidance and best practices to ensure your hybrid configuration meets your business needs and policies.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/microsoft-365/enterprise/plan-for-directory-synchronization?view=o365-worldwide" target="_blank">Hybrid identity and directory synchronization for Microsoft 365</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_32">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#32</span>
+    <span class="finding-card-title">Microsoft Teams External Access Policies</span>
+    <span class="badge badge-Informational">Informational</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>Error processing request.</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Microsoft Teams External Access Policies</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">Global, Tag:FederationAndPICDefault, Tag:FederationOnly, Tag:NoFederationAndPIC</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">Not applicable</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Informational">Informational</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Review Microsoft Teams External Access Policies and validate that all results are expected, and no conflicting rules are in place.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/microsoftteams/manage-external-access" target="_blank">Manage external access (federation) - Microsoft Teams</a></li>
+          
+          <li><a href="https://docs.microsoft.com/en-us/microsoftteams/communicate-with-users-from-other-organizations" target="_blank">Use guest and external access to collaborate with people outside your organization</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_33">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#33</span>
+    <span class="finding-card-title">Password Synchronization Enabled</span>
+    <span class="badge badge-Informational">Informational</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>Password Synchronization is enabled. Last synced 03/13/2026 09:18:35</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Password hash synchronization is one of the sign-in methods used to accomplish hybrid identity. Azure AD Connect synchronizes a hash, of the hash, of a user's password from an on-premises Active Directory instance to a cloud-based Azure AD instance.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">Not applicable</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Informational">Informational</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Follow Microsoft guidance and best practices to ensure your hybrid configuration meets your business needs and policies.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/azure/active-directory/hybrid/whatis-phs" target="_blank">What is password hash synchronization with Azure AD?</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_34">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#34</span>
+    <span class="finding-card-title">Tenant License Level</span>
+    <span class="badge badge-Informational">Informational</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>License:  SKU: Microsoft_365_E5_(no_Teams) Licenses Used: 20 Licenses Remaining: 0</li>
+          
+          <li>License:  SKU: Microsoft_Teams_Enterprise_New Licenses Used: 20 Licenses Remaining: 0</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Export of current Tenant license levels. This information can be used to determine what features and options are available currently for the Tenant, and to determine what licenses may be most beneficial for future use/upgrades.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">Not applicable</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Informational">Informational</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">None.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/microsoft-365/commerce/licenses/subscriptions-and-licenses?view=o365-worldwide" target="_blank">Understand subscriptions and licenses in Microsoft 365 for business</a></li>
+          
+          <li><a href="https://www.microsoft.com/en-us/licensing/product-licensing/microsoft-365" target="_blank">About Microsoft 365</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="finding-card" id="finding_35">
+  <div class="finding-card-header">
+    <span class="finding-card-num">#35</span>
+    <span class="finding-card-title">Users Found in Azure AD Roles</span>
+    <span class="badge badge-Informational">Informational</span>
+  </div>
+  <div class="finding-card-body">
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Affected Objects / Returned Value</div>
+      <div class="finding-field-value">
+        <ul class="affected-list">
+          <!--BEGIN_AFFECTED_OBJECTS_REPEATER-->
+          <li>User: Allan Deyoung; UserPrincipalName: AllanD@M365x36063842.OnMicrosoft.com; Member Type: user; Roles: Global Administrator</li>
+          
+          <li>User: Arij Ben Romdhane; UserPrincipalName: ArijBR@M365x36063842.onmicrosoft.com; Member Type: user; Roles: Security Reader</li>
+          
+          <li>User: ExchangeOnlineApp-26-02-13-01; UserPrincipalName: ; Member Type: servicePrincipal; Roles: Exchange Administrator</li>
+          
+          <li>User: Fourat Beji; UserPrincipalName: FouratB@M365x36063842.onmicrosoft.com; Member Type: user; Roles: Security Reader</li>
+          
+          <li>User: Habib Torjmen; UserPrincipalName: HbibT@M365x36063842.onmicrosoft.com; Member Type: user; Roles: Security Reader</li>
+          
+          <li>User: Isaiah Langer; UserPrincipalName: IsaiahL@M365x36063842.OnMicrosoft.com; Member Type: user; Roles: Global Administrator</li>
+          
+          <li>User: Lidia Holloway; UserPrincipalName: LidiaH@M365x36063842.OnMicrosoft.com; Member Type: user; Roles: Global Administrator</li>
+          
+          <li>User: Malek Boujezza; UserPrincipalName: MalekB@M365x36063842.onmicrosoft.com; Member Type: user; Roles: Security Reader,Global Reader</li>
+          
+          <li>User: managedenvironments-ar-tenant-connector-ame; UserPrincipalName: ; Member Type: servicePrincipal; Roles: Global Administrator</li>
+          
+          <li>User: Megan Bowen; UserPrincipalName: MeganB@M365x36063842.OnMicrosoft.com; Member Type: user; Roles: Global Administrator</li>
+          
+          <li>User: Microsoft.Azure.SyncFabric; UserPrincipalName: ; Member Type: servicePrincipal; Roles: Directory Readers</li>
+          
+          <li>User: MOD Administrator; UserPrincipalName: admin@M365x36063842.onmicrosoft.com; Member Type: user; Roles: Global Administrator</li>
+          
+          <li>User: Nestor Wilke; UserPrincipalName: NestorW@M365x36063842.OnMicrosoft.com; Member Type: user; Roles: Global Administrator</li>
+          
+          <li>User: ProvisioningHealthPME; UserPrincipalName: ; Member Type: servicePrincipal; Roles: Global Administrator</li>
+          <!--END_AFFECTED_OBJECTS_REPEATER-->
+        </ul>
+      </div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Finding</div>
+      <div class="finding-field-value">Privileged roles and users that have administrative rights in Microsoft 365 should be reviewed periodically to ensure best practice and validation of the assigned permissions.</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Default Value</div>
+      <div class="finding-field-value">None</div>
+    </div>
+    <div class="finding-field">
+      <div class="finding-field-label">Expected Value</div>
+      <div class="finding-field-value">Not applicable</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Inherent Risk</div>
+      <div class="finding-field-value"><span class="badge badge-Informational">Informational</span></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">Remediation</div>
+      <div class="finding-field-value">Ensure that there are separate accounts for daily user activities and Azure administration. Remove unneeded administrative users to reduce the risk of successful account compromise attempts. Privileged Identity Management (PIM) in Azure can be used to further reduce risk associated with administrative accounts and privileged roles. NOTE - Not all directory roles will be returned by the query. Directory roles must be enabled, either directly or by user assignment, to be returned in the query. Once a role is enabled it will continue to be returned by this query, even if the user(s) are removed from the role.</div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">PowerShell Example</div>
+      <div class="finding-field-value"><pre><code class="language-powershell"></code></pre></div>
+    </div>
+    <div class="finding-field full-width">
+      <div class="finding-field-label">References</div>
+      <div class="finding-field-value">
+        <ul class="refs-list">
+          <!--BEGIN_REFERENCES_REPEATER-->
+          <li><a href="https://docs.microsoft.com/en-us/azure/active-directory/privileged-identity-management/pim-configure" target="_blank">What is Azure AD Privileged Identity Management?</a></li>
+          <!--END_REFERENCES_REPEATER-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<!--END_FINDING_LONG_REPEATER-->
+
+<!--BEGIN_APPENDIX-->
+<div class="section-heading">Appendix A: Executed Inspectors</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<table id="inspectors">
+  <thead>
+    <tr><th colspan="4" style="background-color:var(--brand-surface2);"><b>Inspectors Executed:</b></th></tr>
+  </thead>
+  <tbody></tbody>
+</table>
+<script>
+var inspectorData = "Inspect-AADRoles,Inspect-ADFS-Configuration,Inspect-AdminsNoMFA,Inspect-AllowedSpoofingList,Inspect-AntiSpoofingPolicy,Inspect-AppKeyCredentials,Inspect-AppPasswords,Inspect-AuditLogSearchEnabled,Inspect-AutoForwarding,Inspect-AZPSAssignment,Inspect-AZPSModules,Inspect-BasicAuthConfig,Inspect-BypassingSafeAttachments,Inspect-BypassingSafeLinks,Inspect-CAPolicies_legacyauth,Inspect-CAPolicies_platforms,Inspect-CAPolicies_registerdevice,Inspect-CAPolicies_registersecurityinfo,Inspect-CAPolicies_signinrisk,Inspect-CAPolicies_userrisk,Inspect-ConditionalAccess,Inspect-CustomAntiMalwarePolicy,Inspect-CustomAntiPhishingPolicy,Inspect-customDLPPolicies,Inspect-customDLPSITypes,Inspect-DangerousAppPermissions,Inspect-DangerousDefaults,Inspect-DirectorySync,Inspect-DirSyncAdmins,Inspect-DirSyncSvcAcct,Inspect-DKIMRecordsSelector1,Inspect-DKIMRecordsSelector2,Inspect-DLPPolicyState,Inspect-DMARCPolicyAction,Inspect-DMARCRecords,Inspect-DomainExpiration,Inspect-DomainSpoofingRule,Inspect-eDiscoveryAdmins,Inspect-EmailVerifiedUserCreation,Inspect-ExchangeMobilePolicy,Inspect-ExchangeModernAuthentication,Inspect-ExecutableAttachments,Inspect-EXOFullAccess,Inspect-EXOHiddenMailboxes,Inspect-EXOSendAsPermissions,Inspect-EXOSendOnBehalfOf,Inspect-ExternalCalendarSharing,Inspect-ExternalForwarding,Inspect-ExternalSenderMailtip,Inspect-Federation,Inspect-FederationTrust,Inspect-IframesAreSpam,Inspect-InternalUsersSendingMalwarePolicy,Inspect-IPInUrlIsSpam,Inspect-LargeAttachmentBlockingRule,Inspect-LinkedInConnection,Inspect-MailboxAuditingAtTenantLevel,Inspect-MailboxAuditingEnabled,Inspect-MailboxesWithIMAPEnabled,Inspect-MailboxesWithInternalForwarding,Inspect-MailboxesWithPOPEnabled,Inspect-MailboxesWithSMTPEnabled,Inspect-MailDKIMEnabled,Inspect-MailFlowRules,Inspect-MaliciousAttachmentTypesFilter,Inspect-MSCommonAttachmentTypesFilter,Inspect-MSOLPowerShell,Inspect-MSTeamsAllowedDomains,Inspect-MSTeamsAnonPolicyMembers,Inspect-MSTeamsAnonUsers,Inspect-MSTeamsConsumerSettings,Inspect-MSTeamsExternalAccess,Inspect-MSTeamsFileSharing,Inspect-MSTeamsLinkPreview,Inspect-NoMFA,Inspect-NoSafeLinksForTeams,Inspect-OAUTHUserConsent,Inspect-OfficeMessageEncryption,Inspect-OutgoingSharingMonitored,Inspect-PartnerSupport,Inspect-PasswordExpiry,Inspect-PasswordSync,Inspect-PhishZAP,Inspect-ProperAdminCount,Inspect-SafeAttachments,Inspect-SafeLinks,Inspect-SafeLinksClickThrough,Inspect-SafeLinksSynchronous,Inspect-SecureDefaultsEnabled,Inspect-SelfServePasswordReset,Inspect-ServicePrincipalKeyCredentials,Inspect-ServicePrincipalPasswordCredentials,Inspect-SharepointExternalSharing,Inspect-SharepointExternalUserResharing,Inspect-SharepointLegacyAuthEnabled,Inspect-SharepointLinkExpiry,Inspect-SharepointModernAuthentication,Inspect-SimPhish,Inspect-SMTPAuthGloballyDisabled,Inspect-SpamMonitoring,Inspect-SpamZAP,Inspect-SPFRecords,Inspect-SPFSoftFail,Inspect-SSPRAllowsEmailAuth,Inspect-TenantLicenseLevel,Inspect-ThirdPartyIntegratedAppPermission,Inspect-TransportRulesAllowlistDomains,Inspect-TransportRulesAllowlistIPs,";
+var inspectors = inspectorData.split(",").filter(s => s.trim() !== "");
+var tableBody = document.querySelector("#inspectors tbody");
+for (var i = 0; i < inspectors.length; i += 4) {
+  var row = "<tr>";
+  for (var j = i; j < Math.min(i + 4, inspectors.length); j++) {
+    row += "<td>" + inspectors[j].trim() + "</td>";
+  }
+  while ((j - i) < 4) { row += "<td></td>"; j++; }
+  row += "</tr>";
+  tableBody.innerHTML += row;
+}
+</script>
+<!--END_APPENDIX-->
+
+<div class="report-footer">
+  <div>
+    <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCADIAMgDASIAAhEBAxEB/8QAHAABAAEFAQEAAAAAAAAAAAAAAAYBAwQFBwII/8QAQRAAAQMEAAMGAwQGBwkAAAAAAQACAwQFBhEHITESE0FRU5EIYZIUFVJxIjI2crGyFjQ1N3SBwhcjM0JVc5Sh0f/EABsBAQACAwEBAAAAAAAAAAAAAAACAwEEBgUH/8QAJxEBAAIBAwQCAQUBAAAAAAAAAAECAwQREhMhMVEicQUUMjNBUoH/2gAMAwEAAhEDEQA/APstERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERARU2PMJ2m+Y91jeBVFTtN8x7p2m+Y903gVRU7TfMe6dpvmPdN4FUVCQOpCbHmE3gVRU2PMJseYTeBVFTY8wmx5hN4FUTY802PNZBE2PNNjzQETY802PNARU2Ou+Sbb+Ie6CqKm2/iHum2/iHugqiptv4h7ptv4h7oKogIPQog4xfJZBeq0CV4AnfoAn8RWH30vqv+orJvn9t13+If/MVhr5zmvbnbv8A27DFWOEfT330vqv+op30vqv+orwiq529rOMPffS+q/6irtHNKauH/ev/AOIPE+YWOrtH/W4f32/xCnjvblHdC1Y2lMc3e8Xxwa8gd23kDrwWj7yT1He5W6zf+3nf9tv8Fo162rtPXs0NNEdKv09d5J6jvcp3knqO9yvKLW5W9ruMPXeSeo73Kd5J6jvcryiRa3s4w3+bPe3D7SQ5wJLdkHRP6BUH76X1X/UVNs4/Y60fm3+QqCrt8P8AHX/jmsn75+5XO+l9V/1FO+l9V/1FW0ViC530vqv+op30vqv+oq2iCXWV8h4fXtxe4kSN0STsfqqG99L6r/qKmFj/ALu73++3/SoWgud9L6r/AKinfS+q/wCoq2iC530vqv8AqKd9L6r/AKiraIJnwnkkdkE4c9zh9mJ5kn/maipwk/aKo/wp/maiDS34ht4ri4gATyEknQA7RUWqcwximmMMl6pe2DohpLwD+YBCh3HPIa65ZxW4vbHO7ttU6ORrDoyyl3JpPkNga8976BZNr4U2ttA0XGsqpKpw250JDWMPkAQSdeZ6+QXG30OHF89RbabT2h0VNTkv8cNd9o7yntvrqK4U4qKGqhqYjy7UTw4b8jrofkslccxC2X/GM9FLFSVstC6buZZRC7u3sPR5OtDWwd75cwuj5PlVnx1rRcJ3GZ42yGIdp5HnroB8yQtTU6LhlimKeUTG7Yw6nlSbXjjMS3iu0f8AW4f32/xCgVt4n47V1LYZm1VIHHQfKwFg/Mgkj2Usul6orJQfe9a5xpYnMcTGA4kEgDQ3z6+apnS5seSsXrMbysjPjvWZrMdvLoGb7+/nb9Nv8Fo1Fct4yYhVyNuVKa2TvB2WwdyBINctkb0AT02dnXRXMLzWzZWZY6DvoqiIBz4ZmgO1vWwQSCN/PxXq6vT5epa/Hs0NNlpwrXfukyKHZRxHxyw1z6GV89XVMOpI6dgPYPkSSBv5DaYpxGx/Ibg23w/aaWqfsRsnYAHkc9Agkb+R0qP0ubjz49l3Xx8uO6YoozlOb2XG7lDb7gKp08zA9rYYw4aJIG9kc9grb3y60lms890ri9tPA0OeGjbuZAAA312QodG8bbx58JdSs7xv48pZnH7H2j82/wAhXOKS72usqnUtJcKWedoJMccoc4AHR2AfAre3rN7TkXCpt6tbKlsFA98TzPGGbeyLZ1onY5jmuE8La2ltEd2yK49sxRhkILRtxc87OhseQXaYomMcRPqHNXmOU/bsyxq+uorfCJq6rhpoyeyHSvDQT5bPjyK4nBkdHLxFN+q3T/YhOZGtaNu0AQzlvXgPFTriHcsZqqK3QXt1xayZv2mJkAAOiNDtb6Hmf/asRTWkqaesp21FLPHPC/Za9jgWnR0dEfMK8ovW32x4baLdRytqhE+LULWtDngAAku5jnz99rCuPEvHqWURRtqqk6BcY2DTSR02SNkeOtj5oOw2P+7u9/vt/wBKhasM4rYjbeH9XAameoqrg4Ohghj29oGtl5JAHMEa3s+A1zWpxbKrXkRkZRuljmjHadFKAHa3rY0SCN/NBvURW6iVsEEk8h0yNpeT5ADZQY77rbWQzzPr6ZsdO/u5nGQARu3rRO+R34FY39Jce/61b/8AyG//AFabhzRRVOKOqK2COb7fUyVD2yMDgSXaBIP5b/zWLn9stu7RbKS30sMtbXMa50cLWnsDm7mBvXMeyDpvDLMcUor5PJV5HaqdjqYtDpKpjQT2mnWyevIor/C7G8eqb7PHU2G1zMFMSGyUjHAHtN56IRBxSw0stw+ISqppWg1El2qw0PIaC/chA2eW9ga/yXezh9+A7RpYwPEmVugPdQ7jhwdv1VlUmZYR+nUyyCeemZII5GTDR7yMkgHZGyNgg7I3vQjdxq/iGyK3HHqm33VsUre7lf8AZWU5kb0IdLoDRHXRG/Ha87V/jMWrtF7zMNzT63JgrNaxG0pFi1+tmT3x9lskzqqrYx7yBGQwNb1PaIA100d89jzXN+GlhquInEutnnhbVNga+pdG9wDSA4NY3meYGxy+S+gOA3DBuBWmequUkc96rWgTuZzZCwdI2nx58yfE68Bs8yrMC4j8M+INVf8AB7cLrQTl7WBoD9xOIPdyM2HbBA0R5A7HMKOD8ViwRaKTO8xtv6Zy67JlmJmI7S1nxDYsLFY7bVVFDT0tRJUmOMx9nbmBpJBA6gHX5b+a02eR3Gh4O4uK1vZ+8AHxkuBLo2A62N7A0WdfkphJgfE3irlVLcM6pvuW10/6Ij0GlrN7LY49k7Ohtzvl10Atr8QmBZTkmQ2C245Y5JLLbaNsLXsewNjJdojRIPJrWeCupoMdK1jeZ4+N1dtVeZmdojf0pgXDektfDemvNXa6apdVW/7bUyztYSGlpeGjfMAN108dlQb4abDW3fJbrX0UIMdNTBjh2gADI7YHM+TCvo3ibbbl/srudmx2jfU1j6IUdPCxwaS06YdEkAabs9fBQbgVw7vVn4aZDa7vFNaLndnvja8PBfEwR6Y8FpPQuceu1OdJSYtvM/JGM9omJ28OS3zDM/wDMKm/tx11xp3SSPbO2MzxljiTs9kksIHidePULbcPqjGM9zWGR9mfRZC3UsQFQRHKYxs65gbAGyCOYB5lb3FJONvDqWsthxuXI6eaTtsmfK6cAga21wdsAgDkQP8ALmtlwc4bZY/iVPxCy6khtcjpJZo6SMjtOkkBBOgT2WgOPInZOt+aZNJTJHeZ8bMU1FqenOsgt9VkXxCQ2VkYkfBVxwlvaBGox23jfTqHKZfEfBW2XCqemqWtjNdVBgHbBJDQXHkD02G+4WqyLC+JmI8YKzKMbsslz7yrlqKadrBKx7ZCdteAQQQHEHeumwVb4l4TxlzOsoLle7WyeQxuDKWlexsdI0noQXfrHqeZOgNnwEZ0WOZpP+fCUam8Rbx8vLLyCiNg+FGzjQbLcKjvH7Oie8cSPz/QaFa4Y4vX0nCGqySSjifSObPVl0jm8xGCAdE76sOvzUy+IPDMnuuJYvjWMWiWtpqBh78sexoaWMaxg5kb5F55KX3XDrm7gJ/Q22BrLiLXHB2XOADpBovaT0Gz2hvpzW413A/h5xOuyGpu9xgooqhkAZEe8LQAXEk6346A91hZ5aq27caqXGBE108csFN3bXAgbAe4bB1yBPsuifDvZuJuKZALHXWD7FYqiZ81ZPNGC4EMIAa4O8SGjofFXeGuB5c/jxW5hkNlmo6LvqmohkkkYQXOJawaBJ6O308EHOOL1ruFbxRoMVDAKoNhp2sa4EB8h2OYOuhHst7xrwyPEMDpI32umpy+pZFFI0sLyQCSSRzOwOe/NSuxYHllf8Rs+WXmzS09pZWyzRTPkYQWtaWxcgSeemnp4LZfFFi2XZbPY6PHrPNXU1K2WSZ7JGNAe4tAH6RHMAH3Qajg7gdvp+Ctyv8AcrTSVFZXQvqI5Z2tcWQN56BP6oIaSehO/wAlz74e8cuV+yC51dupw9lLAGuBeGgF7tgcyN8mFfRuXWO60XBGfGrDRuqa9trZQxxMcAXbAY87JA6Fx6rQ/DJhl2xHFbl9+0LqOvrKsHu3OaT3bWgN5gkdS7xQcbrsjz2nrZ4G4dUubFI5gcKOYggEjexyPTqFubucik4QXDI7pa3W8vJpgxzSx23ODBpjjvnsnovqdc94z2K75LFjdnoaJ01EbzDPcXhwAjgZvewSN730G+iCJ45w9yKhsNDSCiYDFTsa4d8wc9Dfj57UXqcYvFy4x0tnbTNdNarc6rkb3jdNLyGjnvW9EHXVfSwXPeHtiu8PEXNcmu9G6n+31MUFCXOBL4IwQHDROgdA6OjyQXuH+OXW0XiWor4GRxugLGkSB2ySDrQPkCiniICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIg//9k=" alt="Consultim-IT" style="width:90px;opacity:0.5;vertical-align:middle;margin-right:12px">
+    Consultim-IT &nbsp;&middot;&nbsp; Office 365 Security Inspection Report &nbsp;&middot;&nbsp; Confidential
+  </div>
+  <div>365Inspect: Community Edition</div>
+</div>
+
+</div><!-- end page-wrapper -->
+</body>
+</html>
