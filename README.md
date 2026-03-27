@@ -35,19 +35,13 @@ git clone gh repo clone ranimhassine/office-365-inspection
 cd 365Inspect
 ```
 
-**2. Replace / add the Consultim-IT files:**
-
-Copy the following two files into the root of the cloned folder (same level as `365InspectDefaultTemplate.html`):
-
-- `365Inspect.ps1` ← replaces the original
-- `365InspectConsultimTemplate.html` ← new branded template
 
 Your folder should look like this:
 
 ```
 365Inspect/
-├── 365Inspect.ps1                    ✅ replaced
-├── 365InspectConsultimTemplate.html  ✅ new
+├── 365Inspect.ps1                    
+├── 365InspectConsultimTemplate.html  
 ├── 365InspectDefaultTemplate.html
 ├── Inspectors/
 ├── Write-ErrorLog.ps1
@@ -170,8 +164,5 @@ To use SharePoint inspectors, you need to register an Azure AD application for P
 3. Pass it as `-pnpPowerShellApplicationId` when running the script
 
 ---
+<img width="1255" height="558" alt="image" src="https://github.com/user-attachments/assets/d23a0cd3-5c23-4f6d-99c2-3bcf00a7467d" />
 
-## Credits
-
-- Original tool: [365Inspect by Soteria Security](https://github.com/soteria-security/365Inspect)
-- Branding and modifications: **Consultim-IT**
