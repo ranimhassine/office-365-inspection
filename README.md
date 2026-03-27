@@ -5,11 +5,10 @@ A customized version of [365Inspect: Community Edition](https://github.com/soter
 
 ---
 
-## What's Changed
+##About
 
 | File | Change |
 |------|--------|
-| `365Inspect.ps1` | Fixed integer-to-string conversion bug that caused all severity counts to render as 0. Severity badges now use CSS classes instead of inline styles. Points to the Consultim-IT template. |
 | `365InspectConsultimTemplate.html` | New branded dark-theme HTML report template with Consultim-IT logo, gold color palette, stat pills, styled finding cards, and Chart.js visualizations. |
 
 ---
