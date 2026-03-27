@@ -31,7 +31,7 @@ Install-Module -Name PnP.PowerShell -Scope CurrentUser -Force
 **1. Clone the original 365Inspect repository:**
 
 ```powershell
-git clone https://github.com/soteria-security/365Inspect.git
+git clone gh repo clone ranimhassine/office-365-inspection
 cd 365Inspect
 ```
 
